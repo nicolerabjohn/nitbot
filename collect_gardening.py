@@ -14,7 +14,7 @@ def main():
     num_commits = run_command(f"git rev-list --count {original_branch}..{current_branch}")
 
     start_date = run_command(f"git log --format='%cd' --reverse --date=short {original_branch}..{current_branch} | head -n 1")
-    end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")o
+    end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")
 
     commit_list = run_command(f"git log --format='- %s by %an' {original_branch}..{current_branch}")
 
