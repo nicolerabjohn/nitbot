@@ -17,9 +17,11 @@ def main():
     run_command("git push")
 
     result = subprocess.run("git pull --rebase origin main)", shell=True)
+    print(result.stdout)
 
     if result.returncode != 0:
         bad_commit_hash = run_command("git rev-parse HEAD")
+        
         with open(f"{bad_commit_hash}.diff", "w") as diff_file:
             diff_output = run_command(f"git diff {bad_commit_hash}^ {bad_commit_hash}")
             diff_file.write(diff_output)
