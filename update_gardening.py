@@ -12,6 +12,9 @@ def main():
     if not current_branch.endswith("_gardening"):
         init_gardening.main()
 
+    run_command("git add .")
+    run_command("git commit -m 'Update gardening'")
+    run_command("git push")
     run_command("git pull --rebase origin main")
         
 
