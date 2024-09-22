@@ -13,13 +13,6 @@ def main():
     original_branch = current_branch.replace("_gardening", "")
 
     branch_exists = run_command(f"git branch --list {original_branch}")
-    upstream_exists = run_command(f"git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null")
-
-    if not branch_exists:
-        run_command(f"git checkout -b {original_branch}")
-        run_command(f"git push -u origin {original_branch}")
-    elif not upstream_exists:
-        run_command(f"git push -u origin {original_branch}")
 
     num_commits = run_command(f"git rev-list --count {original_branch}..{current_branch}")
     start_date = run_command(f"git log --format='%cd' --reverse --date=short {original_branch}..{current_branch} | head -n 1")
