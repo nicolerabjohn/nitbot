@@ -11,11 +11,19 @@ def main():
     update_gardening.main()
     current_branch = run_command("git rev-parse --symbolic-full-name --abbrev-ref HEAD")
     original_branch = current_branch.replace("_gardening", "")
-    num_commits = run_command(f"git rev-list --count {original_branch}..{current_branch}")
 
+    branch_exists = run_command(f"git branch --list {original_branch}")
+    upstream_exists = run_command(f"git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null")
+
+    if not branch_exists:
+        run_command(f"git checkout -b {original_branch}")
+        run_command(f"git push -u origin {original_branch}")
+    elif not upstream_exists:
+        run_command(f"git push -u origin {original_branch}")
+
+    num_commits = run_command(f"git rev-list --count {original_branch}..{current_branch}")
     start_date = run_command(f"git log --format='%cd' --reverse --date=short {original_branch}..{current_branch} | head -n 1")
     end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")
-
     commit_list = run_command(f"git log --format='- %h: %s by %an' {original_branch}..{current_branch}")
 
     print(f"Creating PR from {current_branch} to {original_branch}")
