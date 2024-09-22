@@ -15,7 +15,8 @@ def main():
 
     start_date = run_command(f"git log --format='%cd' --reverse --date=short {original_branch}..{current_branch} | head -n 1")
     end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")
-    commit_list = run_command(f"git log --format='- %s by %an' {original_branch}..{current_branch}")
+
+    commit_list = run_command(f"git log --format='- %h: %s by %an' {original_branch}..{current_branch}")
 
     print(f"Creating PR from {current_branch} to {original_branch}")
 
