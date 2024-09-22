@@ -9,6 +9,7 @@ def run_command(command):
     return result.stdout.strip()
 
 def main():
+
     update_gardening.main()
     current_branch = run_command("git rev-parse --symbolic-full-name --abbrev-ref HEAD")
     original_branch = current_branch.replace("_gardening", "")
@@ -18,6 +19,7 @@ def main():
     end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")
 
     commit_list = run_command(f"git log --format='- %s by %an' {original_branch}..{current_branch}")
+    print(f"Creating PR from {current_branch} to {original_branch}")
 
     run_command(f'gh pr create --head {current_branch} --base {original_branch} '
                 f'--title "[nit-bot:GARDENING] Gardening nits {start_date} to {end_date}" '
