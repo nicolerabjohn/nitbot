@@ -17,7 +17,7 @@ def main():
     run_command("git push")
 
     result = subprocess.run("git pull --rebase origin main)", shell=True, capture_output=True, text=True)
-    print(result.stdout)
+    print(result.returncode)
 
     if result.returncode > 0:
         bad_commit_hash = run_command("git rev-parse HEAD")
