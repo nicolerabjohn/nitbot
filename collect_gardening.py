@@ -14,12 +14,16 @@ def main():
     num_commits = run_command(f"git rev-list --count {original_branch}..{current_branch}")
 
     start_date = run_command(f"git log --format='%cd' --reverse --date=short {original_branch}..{current_branch} | head -n 1")
-    end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")o
+    end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")
 
-    commit_list = run_command(f"git log --format='- %s by %an' {original_branch}..{current_branch}")
+    commit_list = run_command(f"git log --format='- %h: %s by %an' {original_branch}..{current_branch}")
 
-    run_command("gh pr create {original_branch} --head {current_branch} --title “[nit-bot:GARDENING] Gardening nits {start_date} to {end_date}“ --body “Collected the following {num_commits} gardening nit commits since last commit on {end_date}”: {commit_list}”")
+    print(f"Creating PR from {current_branch} to {original_branch}")
 
+    run_command(f'gh pr create --head {current_branch} --base {original_branch} '
+                f'--title "[nit-bot:GARDENING] Gardening nits {start_date} to {end_date}" '
+                f'--body "Collected the following {num_commits} gardening nit commits since last commit on {end_date}:\n{commit_list}"')
 
 if __name__ == "__main__":
     main()
+
