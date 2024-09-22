@@ -3,19 +3,18 @@ import update_gardening
 
 def run_command(command):
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"Error: {result.stderr}")
     return result.stdout.strip()
 
 def main():
     update_gardening.main()
     current_branch = run_command("git rev-parse --symbolic-full-name --abbrev-ref HEAD")
     original_branch = current_branch.replace("_gardening", "")
-    num_commits = run_command(f"git rev-list --count {original_branch}..{current_branch}")
 
+    branch_exists = run_command(f"git branch --list {original_branch}")
+
+    num_commits = run_command(f"git rev-list --count {original_branch}..{current_branch}")
     start_date = run_command(f"git log --format='%cd' --reverse --date=short {original_branch}..{current_branch} | head -n 1")
     end_date = run_command(f"git log --format='%cd' --date=short {original_branch}..{current_branch} | head -n 1")
-
     commit_list = run_command(f"git log --format='- %h: %s by %an' {original_branch}..{current_branch}")
 
     print(f"Creating PR from {current_branch} to {original_branch}")
