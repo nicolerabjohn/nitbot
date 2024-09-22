@@ -15,6 +15,7 @@ def main():
     run_command("git add .")
     run_command("git commit -m 'Update gardening'")
     run_command("git push")
+    print("Hello")
     run_command("git pull --rebase origin main")
         
 
