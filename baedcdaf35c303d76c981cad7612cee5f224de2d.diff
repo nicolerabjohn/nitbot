@@ -1,0 +1,49 @@
+diff --git a/8cfbfaa3e4444fd3e1b882ef169b0b43dcded427.diff b/8cfbfaa3e4444fd3e1b882ef169b0b43dcded427.diff
+new file mode 100644
+index 0000000..042d2d9
+--- /dev/null
++++ b/8cfbfaa3e4444fd3e1b882ef169b0b43dcded427.diff
+@@ -0,0 +1,26 @@
++diff --git a/update_gardening.py b/update_gardening.py
++index 79386be..88fadf4 100755
++--- a/update_gardening.py
+++++ b/update_gardening.py
++@@ -15,9 +15,18 @@ def main():
++     run_command("git add .")
++     run_command("git commit -m 'Update gardening'")
++     run_command("git push")
++-    print("Hello")
++-    run_command("git pull --rebase origin main")
++-        
+++
+++    result = subprocess.run("git pull --rebase origin main)", shell=True)
+++
+++    if result.returncode != 0:
+++        bad_commit_hash = run_command("git rev-parse HEAD")
+++        with open(f"{bad_commit_hash}.diff", "w") as diff_file:
+++            diff_output = run_command(f"git diff {bad_commit_hash}^ {bad_commit_hash}")
+++            diff_file.write(diff_output)
+++
+++        # Remove the bad commit
+++        run_command("git rebase --abort")
+++        print(f"Rebase failed. The bad commit has been saved as {bad_commit_hash}.diff")
++ 
++ if __name__ == "__main__":
++     main()
+\ No newline at end of file
+diff --git a/update_gardening.py b/update_gardening.py
+index 88fadf4..25c5b84 100755
+--- a/update_gardening.py
++++ b/update_gardening.py
+@@ -17,9 +17,11 @@ def main():
+     run_command("git push")
+ 
+     result = subprocess.run("git pull --rebase origin main)", shell=True)
++    print(result.stdout)
+ 
+     if result.returncode != 0:
+         bad_commit_hash = run_command("git rev-parse HEAD")
++        
+         with open(f"{bad_commit_hash}.diff", "w") as diff_file:
+             diff_output = run_command(f"git diff {bad_commit_hash}^ {bad_commit_hash}")
+             diff_file.write(diff_output)

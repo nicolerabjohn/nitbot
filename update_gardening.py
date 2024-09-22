@@ -16,7 +16,7 @@ def main():
     run_command("git commit -m 'Update gardening'")
     run_command("git push")
 
-    result = subprocess.run("git pull --rebase origin main)", shell=True)
+    result = subprocess.run("git pull --rebase origin main)", shell=True, capture_output=True, text=True)
     print(result.stdout)
 
     if result.returncode != 0:
